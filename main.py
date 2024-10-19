@@ -10,6 +10,8 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Form
 
+import circle_bender
+
 load_dotenv()
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-finalist_file_path = "./input/singapore.txt.txt"
+finalist_file_path = "./input/singapore.txt"
 if os.path.exists(finalist_file_path):
     with open(finalist_file_path, "r", encoding="utf-8") as file:
         finalists_content = file.read()
@@ -52,6 +54,11 @@ async def ask_llm(question: str = Form(...)):
         return {"error": str(e)}
 
 
+def generate_wallet_id_and_address(project_name: str):
+    """Generate wallet_id and wallet_address using the email as a base."""
+    wallet_id, wallet_address = circle_bender.initialize_wallet(project_name, project_name, project_name)
+    return wallet_id, wallet_address
+
 @app.post("/ask-llm-with-context")
 async def ask_llm(question: str = Form(...)):
     try:
@@ -74,6 +81,24 @@ async def ask_llm(question: str = Form(...)):
         return {"answer": answer}
     except Exception as e:
         return {"error": str(e)}
+
+
+@app.post("/register-project")
+async def register_project(project: str = Form(...)):
+    try:
+        if not project:
+            raise HTTPException(status_code=400, detail="Project name is required")
+
+        # Generate wallet ID and address
+        wallet_id, wallet_address = generate_wallet_id_and_address(project)
+
+        return {
+            "wallet_id": wallet_id,
+            "wallet_address": wallet_address
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 
 # Start the app
 if __name__ == "__main__":
