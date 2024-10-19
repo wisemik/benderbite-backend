@@ -91,11 +91,26 @@ async def register_project(project: str = Form(...)):
 
         # Generate wallet ID and address
         wallet_id, wallet_address = generate_wallet_id_and_address(project)
+        execution_result = circle_bender.call_contract_execution(project, wallet_address)
 
         return {
             "wallet_id": wallet_id,
-            "wallet_address": wallet_address
+            "wallet_address": wallet_address,
+            "ens_address": execution_result
         }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/generate-ens")
+async def generate_ens(name: str = Form(...), address: str = Form(...)):
+    try:
+        if not name or not address:
+            raise HTTPException(status_code=400, detail="Name and address are required")
+
+        # Call the contract execution function
+        execution_result = circle_bender.call_contract_execution(name, address)
+
+        return {"execution_result": execution_result}
     except Exception as e:
         return {"error": str(e)}
 

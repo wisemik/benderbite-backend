@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.DEBUG)
 # Load environment variables from a .env file
 load_dotenv()
 
-def call_contract_execution():
+def call_contract_execution(name, address):
     # Retrieve necessary environment variables
     api_token = os.getenv('CIRCLE_API_KEY')
     wallet_id = 'f89bfdb1-ccf3-517a-8046-12cffeb406de'  # Example wallet ID
@@ -35,7 +35,7 @@ def call_contract_execution():
         "contractAddress": contract_address,
         "abiFunctionSignature": "register(string,address)",
         "abiParameters": [
-            "1212", "0x3706cfaa920def233f002e335eaec90f51f4522a"
+            name, address
         ],
         "feeLevel": "HIGH",
         "entitySecretCiphertext": encrypted_entity_secret
@@ -55,6 +55,7 @@ def call_contract_execution():
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()  # Raise an error for bad responses
         print("Contract execution response:", response.json())
+        return f"https://app.ens.domains/{name}.benderbite.eth"
     except requests.exceptions.HTTPError as e:
         logging.error(f"HTTP error occurred: {e.response.text}")
     except Exception as e:
@@ -186,4 +187,4 @@ def encrypt_entity_secret():
 
     return encrypted_entity_secret
 
-call_contract_execution()
+# call_contract_execution()
