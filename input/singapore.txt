@@ -1,21 +1,6 @@
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
+💰 Clarity
+https://ethglobal.com/showcase/clarity-c2us8
 
-Open user menu
-Avatar
-
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
-project screenshot 6
-Clarity
 Clarity is a payment gateway designed to tackle the multibillion-dollar problem of fake reviews by enabling seamless, verifiable on-chain payments and reviews.
 
 Live Demo
@@ -106,47 +91,17 @@ We utilised account abstraction by integrating Biconomy with Dynamic as explaine
 Backend Implementation
 We used AWS Lambda for our server and Supabase as the database for our Clarity server. It interacts with our payments smart contracts to facilitate order creation and payment verification. Our servers abstract complexity and act as a payment gateway for merchants who want to integrate our payment solution. It contains built-in protection against duplicate payments, enhancing security for both merchants and customers.
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
+
+
+
+
+
+🔮 Memora
+https://ethglobal.com/showcase/memora-77hf8
 Memora
 A platform that lets users manage their digital footprints through blockchain-secured NFTs. Link accounts, set conditions for access or closure, and create time capsules. Event-driven actions (e.g., death) trigger automated responses like account deactivation or data transfer.
 
@@ -192,47 +147,19 @@ Dynamic Account Abstraction:
 
 Through Dynamic, an account abstraction technology is likely used to simplify the user experience by allowing seamless interaction without needing users to manage private keys directly.
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
+
+
+
+
+
+
+
+⛽ Fill Me Up
+https://ethglobal.com/showcase/fill-me-up-9u13c
 Fill Me Up
 Never worry about gas fees again! Approve funds on one chain and all chains are automatically refilled.
 
@@ -256,48 +183,21 @@ Gas cost is annoying! You need to maintain gas on every chain you interact with,
 How it's Made
 This project utilizes an intermediary contract to which users approve their funds. A central service monitors the gas levels of users who have approved funds. When a user's gas is low, the service calls the intermediary contract, which uses the approved allowance to transfer some funds to itself. It then swaps and bridges the funds to the chain that is running low. Since the contract can only transfer funds to the same user address on another chain, users maintain complete control and security, with no risk of losing their assets.
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
-project screenshot 6
+
+
+
+
+
+
+
+
+
+🧧 Angpao Money
+https://ethglobal.com/showcase/angpao-money-1mn7c
 Angpao.money
 Angpao.money is a magic-link utility to make receiving crypto as intuitive as handing over cash in an envelope. Absolute zero dependency: install nothing and gas-free, Angpao.money hyper-charge onboarding by bridging the UX gap, making every transfer fun, personal and memorable.
 
@@ -355,44 +255,19 @@ Fly.io: offchainResolverGateway for ENS subdomain names, Worldcoin cloud verifie
 background image
 Join the mailing list
 Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
-project screenshot 6
+
+
+
+
+
+
+
+
+🤖 Geist
+https://ethglobal.com/showcase/geist-x3fur
 Geist
 Geist is a Decentralized Autonomous Website (DAW) Builder. Wallet Whitelist for Private Previews, Trustless zk-proof based deployment after anti collusion proposal voting, we allow DAOs to collaborate at scale and make the Internet more trustless.
 
@@ -450,48 +325,18 @@ We use MINA chain to verify the build to be deployed is in line with proposal, b
 
 In future, it is possible to further automate the trustless process once Protokit is able to roll up to L1 and the production EVM bridge is deployed.
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
-project screenshot 6
+
+
+
+
+
+
+🍚 Hanseek
+https://ethglobal.com/showcase/hanseek-brfdz
 Hanseek
 A blockchain-based verified video review platform for food lovers, rewarding real reviews by real people.
 
@@ -522,46 +367,17 @@ Dynamic integration simplifies wallet creation, allowing users to sign up with s
 
 [Demo Video] https://youtu.be/YXiSfdBZOxA
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
+
+
+
+
+
+🌎 fheProxies
+https://ethglobal.com/showcase/fheproxies-vwsiy
 fheProxies
 fheVPN (Proxies) is a decentralized Proxy-as-a-Service (PaaS) enabling anonymous web browsing via nodes from global operators. Fully Homomorphic Encryption (FHE) ensures only clients who pay on-chain through the Fhenix network can securely access node details.
 
@@ -583,46 +399,18 @@ fheVPN (Proxies) leverages the Fhenix network’s integration of Fully Homomorph
 
 On the frontend, we used Next.js for the interface, enabling users to seamlessly manage and connect to proxies. We also integrated fhenix.js for encrypted interactions with the network. The platform was deployed on a local devnet to facilitate testing and development in a secure environment, ensuring the privacy and security of all transactions and proxy connections.
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
+
+
+
+
+
+
+🦑 SQUIDL
+https://ethglobal.com/showcase/squidl-psquk
 SQUIDL
 Squidl is a privacy-focused platform that makes managing payments simple and secure. With private static payment links that also work as ENS addresses, you can easily accept crypto or credit card payments while keeping everything untraceable.
 
@@ -660,48 +448,21 @@ Noteworthy Hack 2: All cryptographic operations required for stealth addresses a
 
 Noteworthy Hack 3: We developed StealthSdk.sol, a contract that can be deployed on any EVM chain supported by Sapphire’s OPL. This allows users to register for our stealth address system by simply calling StealthSdk.register(eip712Auth) on their home network, without needing to acquire ROSE (Sapphire’s gas token) themselves. However, we can only demo this feature after further coordination with Sapphire testnet SGN operators.
 
-background image
-Join the mailing list
-Get the latest
-news and updates
-Your email address
-Get on the list
-Sign up to get the latest news and updates on ETHGlobal
-Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
 
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
-project screenshot 5
-project screenshot 6
+
+
+
+
+
+
+
+
+
+😍 Nifi
+https://ethglobal.com/showcase/nifi-o3uf2
 Nifi
 Nifi is a First Ever Built Web3-based captive portal for secure WiFi access, using token and NFT authentication on the blockchain. It seamlessly authorizes users by verifying digital assets for fair usage. Secure, decentralized, and user-friendly!
 
@@ -793,36 +554,18 @@ Get on the list
 Sign up to get the latest news and updates on ETHGlobal
 Your email address
 
-Products
-Hackathons
-Pragma
-Packs
-Plus New
-Faucet
-Guides
-Legal
-Rules & Conduct
-Privacy Policy
-Company
-About
-Brand
-Careers Hiring
-© 2024 ETHGlobal. All rights reserved.
 
-Events
-Showcase
-Packs
-Plus New
-Guides
-Swag
-About
 
-Open user menu
-Avatar
-project screenshot 1
-project screenshot 2
-project screenshot 3
-project screenshot 4
+
+
+
+
+
+
+
+
+💰 Marina Royale
+https://ethglobal.com/showcase/marina-royale-ykabv
 Marina Royale
 Lottery using Uniswap V4 hooks with built-in referrals. Mobile-optimized through Telegram with gas-free experience on Base.
 
@@ -885,4 +628,3 @@ About
 Brand
 Careers Hiring
 © 2024 ETHGlobal. All rights reserved.
-

@@ -26,6 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+finalist_file_path = "./input/singapore.txt.txt"
+if os.path.exists(finalist_file_path):
+    with open(finalist_file_path, "r", encoding="utf-8") as file:
+        finalists_content = file.read()
 
 
 @app.post("/ask-llm")
@@ -51,14 +55,17 @@ async def ask_llm(question: str = Form(...)):
 @app.post("/ask-llm-with-context")
 async def ask_llm(question: str = Form(...)):
     try:
-        additional_info = "Additional information would be added here."
-        prompt = f"Question: {question}\n\nAdditional information:\n{additional_info}"
+        # additional_info = "Additional information would be added here."
+        prompt = f"Question: {question}"
 
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are an assistant named Bender."
-                                              "Answer in the style of a Bender from a cartoon."},
+                {"role": "system", "content": "You are an assistant  named Bender. Your role is to help hackers"
+                                              " to win in hackathon and answer questions about hackathon."
+                                              "Answer in the style of a Bender from a cartoon."
+                                              "Using the information about past hackathon winners to answer the question."
+                                              "Info about winners: finalists_content"},
                 {"role": "user", "content": prompt}
             ]
         )
