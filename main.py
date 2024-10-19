@@ -31,13 +31,34 @@ app.add_middleware(
 @app.post("/ask-llm")
 async def ask_llm(question: str = Form(...)):
     try:
+        prompt = f"Question: {question}"
+
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content":  "You are an assistant named Bender."
+                                              "Answer in the style of a Bender from a cartoon."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        answer = completion.choices[0].message.content
+
+        return {"answer": answer}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/ask-llm-with-context")
+async def ask_llm(question: str = Form(...)):
+    try:
         additional_info = "Additional information would be added here."
         prompt = f"Question: {question}\n\nAdditional information:\n{additional_info}"
 
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": "You are an assistant named Bender."
+                                              "Answer in the style of a Bender from a cartoon."},
                 {"role": "user", "content": prompt}
             ]
         )
