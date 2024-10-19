@@ -2,7 +2,9 @@ import os
 import uuid
 import logging
 from circle.web3 import developer_controlled_wallets as dc_wallets
+from circle.web3 import smart_contract_platform, developer_controlled_wallets
 from circle.web3 import utils as circle_utils
+
 import requests
 from dotenv import load_dotenv
 import base64
@@ -15,6 +17,76 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Load environment variables from a .env file
 load_dotenv()
+
+def call_contract_execution():
+    # Retrieve necessary environment variables
+    api_token = os.getenv('CIRCLE_API_KEY')
+    wallet_id = 'f89bfdb1-ccf3-517a-8046-12cffeb406de'  # Example wallet ID
+    contract_address = '0x5ad32460313e15a165703bd38a65965f4e7c4d0c'  # Example contract address
+    encrypted_entity_secret = encrypt_entity_secret()
+
+    # Generate a unique idempotency key
+    idempotency_key = str(uuid.uuid4())
+
+    # Construct the payload
+    payload = {
+        "idempotencyKey": idempotency_key,
+        "walletId": wallet_id,
+        "contractAddress": contract_address,
+        "abiFunctionSignature": "register(string,address)",
+        "abiParameters": [
+            "1212", "0x3706cfaa920def233f002e335eaec90f51f4522a"
+        ],
+        "feeLevel": "HIGH",
+        "entitySecretCiphertext": encrypted_entity_secret
+    }
+
+    headers = {
+        "Authorization": f"Bearer {api_token}",
+        "Content-Type": "application/json",
+        "accept": "application/json"
+    }
+
+    # Endpoint for contract execution
+    url = "https://api.circle.com/v1/w3s/developer/transactions/contractExecution"
+
+    try:
+        # Send POST request
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()  # Raise an error for bad responses
+        print("Contract execution response:", response.json())
+    except requests.exceptions.HTTPError as e:
+        logging.error(f"HTTP error occurred: {e.response.text}")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+
+def call_smartcontract():
+    api_key = os.getenv('CIRCLE_API_KEY')
+    entity_secret = os.getenv("CIRCLE_HEX_ENCODED_ENTITY_SECRET_KEY")
+    scpClient = circle_utils.init_smart_contract_platform_client(api_key=api_key,
+                                                                 entity_secret=entity_secret)
+
+    # create an api instance
+    api_instance = smart_contract_platform.ViewUpdateApi(scpClient)
+    try:
+        resposne = api_instance.get_contract(id='0192a688-2cbf-7ee0-8eeb-33947bd7e95f')
+        print(resposne)
+    except smart_contract_platform.ApiException as e:
+        print("Exception when calling ViewUpdateApi->get_contract: %s\n" % e)
+
+    api_instance = developer_controlled_wallets.TransactionsApi(scpClient)
+    try:
+        request = developer_controlled_wallets.CreateContractExecutionTransactionForDeveloperRequest.from_dict({
+            "walletId": 'f89bfdb1-ccf3-517a-8046-12cffeb406de',
+            "contractAddress": '0x5ad32460313e15a165703bd38a65965f4e7c4d0c',
+            "abiFunctionSignature": 'safeMint(address, uint256)',
+            "abiParameters": ['yertyert', '0x6E5eAf34c73D1CD0be4e24f923b97CF38e10d1f3'],
+            "feeLevel": 'HIGH'
+        })
+        resposne = api_instance.create_developer_transaction_contract_execution(request)
+        print(resposne)
+    except developer_controlled_wallets.ApiException as e:
+        print("Exception when calling TransactionsApi->create_developer_transaction_contract_execution: %s\n" % e)
 
 def initialize_wallet(project_label, wallet_label, reference_id):
     # Begin wallet initialization
@@ -113,3 +185,5 @@ def encrypt_entity_secret():
     encrypted_entity_secret = encrypted_secret_base64.decode()
 
     return encrypted_entity_secret
+
+call_contract_execution()
