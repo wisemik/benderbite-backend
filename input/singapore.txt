@@ -1,0 +1,888 @@
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+project screenshot 6
+Clarity
+Clarity is a payment gateway designed to tackle the multibillion-dollar problem of fake reviews by enabling seamless, verifiable on-chain payments and reviews.
+
+Live Demo
+Source Code
+Clarity
+Created At
+ETHGlobal Singapore
+Winner of
+
+The Graph - Best New Subgraph Grand Prize
+
+Sign Protocol - Best Overall Application
+
+Sign Protocol - Best Consumer Application
+
+Worldcoin - Best Use of World ID 2nd place
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+Store dashboard demo
+
+Checkout demo
+
+PROBLEM:
+Summary
+Fake reviews mislead consumers, create unfair competition, erode trust in online platforms, and distort marketplace dynamics, leading to financial and reputational harm for both businesses and customers.
+
+Extent of the problem
+Fake reviews are widespread, with estimates suggesting that up to 42% of reviews on major platforms like Amazon could be fake, costing global businesses over $152 billion annually. Consumers are increasingly aware of the issue, with 62% believing they've encountered fake reviews in the past year.
+
+Key Reasons
+Bots: Automated systems generate fake reviews in bulk, inflating ratings for products or services.
+One Person Having Multiple Accounts: Individuals create multiple accounts to post numerous fake reviews, artificially boosting or harming a product’s reputation.
+Censored or Edited Reviews: Platforms or sellers manipulate reviews by censoring negative feedback or selectively editing them to present products in a more favourable light.
+Opaqueness of existing review systems: Users have little to no insights into how existing review mechanisms work, and whether transactions have been made for the product/service being reviewed.
+SOLUTION - Clarity
+Clarity is a highly usable online payment gateway SDK that can be integrated with any online and physical merchant easily. It aims to solve the following issues:
+
+Building merchant’s trust in user
+Clarity aims to solve the issues of trust between consumers and merchants using payment and review attestations through Sign Protocol and proof of personhood via WorldID. This ensures that every review is created by a real person. Clarity also rewards each user a Clarity token regardless of their Ethereum address. This helps guard against sybils and multi-accounters
+
+Building user trust in Merchants
+Review attestations also help build trust in merchants. Additionally, Clarity seamlessly mints an ENS address for merchants, making merchants address easily identifiable by users. Similar to a web 2.0 domain, this makes it familiar for users to pay and trust merchants.
+
+Solving the issue of opaque review systems
+Web3 transactions are transparent to users, and anyone can verify the legitimacy of transactions and their corresponding reviews. Shifting payments on-chain would thereby allow users to verify how our review mechanism works, while also allowing merchants to enjoy the benefit of reduced transaction costs on layer 2 networks. Clarity therefore aspires to accelerate the shift to decentralized payments, by being the next-gen payment gateway to onboard web2 users to web3 with superior user experience.. Clarity enables any user to seamlessly create a smart wallet simply by using Google to log in through Dynamic, without needing to know anything about wallets, transactions or gas.
+
+How it's Made
+Contracts - Clarity consists of three main contracts
+Clarity (main)
+ClaritySPHook
+Sign Protocol’s SP contract which are integrated with the ERC-4337 Account Abstraction module infrastructure provided by Biconomy.
+The main Clarity manages all cash flow from order payments between customers and merchants while enabling reviews through Sign Protocol’s attestations. To enable the best flexibility and convenience for users, the contract integrates multi-token swaps via OneInchSwapHelper to facilitate payment settlement in different currencies.
+
+The Clarity main contract integrates the Sign Protocol to leverage its review schema and custom hook instance (ClaritySPHook) for enhanced attestation capabilities. This integration ensures that reviews are not only verified but also tied to specific users through privacy-preserving methods such as WorldID.
+
+Frontend
+We created an SDK for merchants to implement into their own sites. We also built a UI for merchants to view their reviews and other statistics.
+
+WorldID
+By leveraging WorldID's incognito actions for private proof of personhood, we ensure that all purchases and reviews are made by real verified users, not bots. WorldID's privacy-preserving proof allows linking multiple ETH addresses to 1 person, enabling accurate collection of loyalty points while preserving privacy. This integration enhances the integrity of our platform and provides greater flexibility for blockchain-based financial services. Additionally, WorldID’s proof of personhood can help combat concert ticket botters by ensuring that 1 worldID user can only buy 1 ticket.
+
+SignProtocol
+Sign protocol’s attestation has the perfect synergy with integrating with WorldID’s proof of personhood enabling us to verify a real person made a transaction. Coupled with the immutability and censorship resistance of public blockchains, Clarity chose SignProtocol to be the default attestation platform for review attestation, efficient data indexing and enabling merchants to leverage on these to issue points, cashback, or bonuses to real persons based on real transactions.
+
+All purchases and transactions made by the user are being attested, and all reviews done by the user are being attested. This ensures that reviews can only be made by a user who made a purchase and the review is real on the public blockchain, improving trust amongst merchants and users.
+
+Sign Protocol’s instance also enables custom hook integration that enables the flexibility for advanced implementation on top of just a simple attestation feature. Here, Clarity leverages Sign Protocol for review attestations to guarantee immutability and censorship resistance while gelling with WorldID’s humanhood verification to ensure the authenticity and fairness of its native loyalty program based on genuine proactiveness.
+
+Subgraph
+Thanks to TheGraph Protocol, Clarity has near-instantaneous access to blockchain data through a developer-friendly API. With real-time listening capability, Clarity can track firstly all its cash flow activities (from its main contract), secondly the respective on-chain review attestations from Sign Protocol & thirdly its human hood verification tracking & attestation loyalty point system in an efficient manner without the need for complex infrastructure set-up. With the help of abstracting complex data structures, this not only services for simplifying blockchain data analytics but also ensures that scalability requirements can be effectively met as the amount of data generated increases exponentially.
+
+Dynamic
+Dynamic is a core integration which allows provides a seamless end-to-end experience. Our users first log in with traditional methods like Gmail etc. We integrated Biconomy’s Account Abstraction SDK which allowed us to bundle multiple transactions together like our approve and pay transactions, allowing a one click checkout process. To take things further, we sponsored all our users’ transactions, removing the need for users to understand anything about gas. All of these combined allow for Web3 transactions with Web2 experiences, something that we think is important to onboard the next 1M users.
+
+1Inch
+We utilised 1Inch dev APIs for displaying the price of assets. We also integrated the 1INCH Swap Aggregator V6 on our contracts. This allows users to pay in any token of their choice, while merchants always receive USDC. In the future, we plan to use the 1Inch fusion API, to provide cross-chain swaps as well.
+
+ENS
+We offer merchants a streamlined process to mint their own ENS addresses during registration, providing their customers with user-friendly, memorable nicknames instead of complex addresses. This feature simplifies communication and transactions, making Web3 payments more accessible to mainstream users.
+
+Nouns
+Nouns is a fun addition we have for our project, Nouns help our users create fun profile pictures so that they each have a unique profile avatar yet maintain anonymity. We used nouns as a general design system to guide our loading and error states.
+
+Abstraction
+We utilised account abstraction by integrating Biconomy with Dynamic as explained earlier. This makes it easier for users to deal with the Web3 transactions.
+
+Backend Implementation
+We used AWS Lambda for our server and Supabase as the database for our Clarity server. It interacts with our payments smart contracts to facilitate order creation and payment verification. Our servers abstract complexity and act as a payment gateway for merchants who want to integrate our payment solution. It contains built-in protection against duplicate payments, enhancing security for both merchants and customers.
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+Memora
+A platform that lets users manage their digital footprints through blockchain-secured NFTs. Link accounts, set conditions for access or closure, and create time capsules. Event-driven actions (e.g., death) trigger automated responses like account deactivation or data transfer.
+
+Live Demo
+Source Code
+Memora
+Created At
+ETHGlobal Singapore
+Winner of
+
+Gaia - Build a Public Good Integration with web3 AI 1st place
+
+Worldcoin - Pool Prize
+Prize Pool
+
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+Our platform enables users to manage and preserve their digital footprints securely through blockchain-backed NFTs timecapsules. Users can link various digital accounts (social media, wallet addresses, email, cloud storage) and set specific conditions for transferring, preserving, or terminating access based on life events such as death, marriage, or even job change activity. With AI monitoring agents, the platform continuously tracks account activity, triggering automated actions when predefined events occur. Time capsule NFTs allow users to store digital content and assets that can be unlocked by people that where stetted previously by the owner.
+
+How it's Made
+NFT (Non-Fungible Tokens ERC721):
+
+Time Capsule NFTs are minted on the blockchain to securely store digital assets and grant future access based on life events. These NFTs serve as the core of the digital legacy, with ownership and access rights stored immutably on the blockchain.
+
+Blockchain (deployed on Rootst):
+
+Smart Contracts written in Solidity enforce the conditions under which these time capsules can be unlocked. This allows for automatic triggers (e.g., a life event like passing away, or a marriage) based on farcaster activity to execute programmed actions such as granting access to this assets to designated individuals.
+
+AI Agents using (Gaia net on private node trained by us):
+
+AI agents are spawned to monitor life events (e.g., a wedding, passing away) on farcaster and verify that specific triggers occur. These agents act as monitoring systems, the AI models use RAG (Retrieval Augmented Generation) to find relevant events.
+
+Multi-Factor Authentication (MFA) with Worldcoin:
+
+Human Proof MFA: The process includes multi-factor authentication to confirm identity. This adds a layer of security to the system, ensuring that this NFT's are stamped as a real human NFT's.
+
+Event Triggers:
+
+The system responds to various event triggers (e.g., a wedding, passing away), which initiate actions in the smart contract. Once verified, actions like granting access to digital accounts or transferring control of the time capsule NFT are executed.
+
+Dynamic Account Abstraction:
+
+Through Dynamic, an account abstraction technology is likely used to simplify the user experience by allowing seamless interaction without needing users to manage private keys directly.
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+Fill Me Up
+Never worry about gas fees again! Approve funds on one chain and all chains are automatically refilled.
+
+Live Demo
+Source Code
+Fill Me Up
+Created At
+ETHGlobal Singapore
+Winner of
+
+Reown - Best projects building with Reown's AppKit
+
+NounsDAO - Expand Public Goods 1st place
+
+Hyperlane - Best Application
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+Gas cost is annoying! You need to maintain gas on every chain you interact with, and eventually, you'll run out on some of them. With this project, you can approve funds on a single chain. Whenever you're low on gas on any chain, your balance will automatically be filled up using those approved funds. This ensures you only spend the minimum necessary to keep just enough gas on all chains, saving you from the hassle of manual refills.
+
+How it's Made
+This project utilizes an intermediary contract to which users approve their funds. A central service monitors the gas levels of users who have approved funds. When a user's gas is low, the service calls the intermediary contract, which uses the approved allowance to transfer some funds to itself. It then swaps and bridges the funds to the chain that is running low. Since the contract can only transfer funds to the same user address on another chain, users maintain complete control and security, with no risk of losing their assets.
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+project screenshot 6
+Angpao.money
+Angpao.money is a magic-link utility to make receiving crypto as intuitive as handing over cash in an envelope. Absolute zero dependency: install nothing and gas-free, Angpao.money hyper-charge onboarding by bridging the UX gap, making every transfer fun, personal and memorable.
+
+Live Demo
+Source Code
+Angpao.money
+Created At
+ETHGlobal Singapore
+Winner of
+
+The Graph - Best Substream Grand Prize
+
+ENS - Best use of ENS 1st place
+
+Worldcoin - Pool Prize
+Prize Pool
+
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+"Simplicity is the ultimate sophistication." -- Leonardo da Vinci
+
+Angpao.money is a simple yet powerful utility that creates magic links, allowing everyone, anyone to receive crypto effortlessly. Here’s how it works:
+
+Sender: Deposit -> Personalize -> Share 1.⁠ The sender deposits the assets into a smart contract. 2.⁠ The sender personalizes the envelope. 3.⁠ The sender obtains a link, which would be shared to the recipient.
+
+Recipient: Access -> Connect -> Receive 1.⁠ The recipient accesses the link. 2.⁠ The recipient can either connect an existing wallet or create a new one via social login. 3.⁠ The recipient signs to receive the asset without paying gas fees.
+
+Angpao.money is three things: 1.⁠ The most accessible onboarding solution. 2.⁠ The most intuitive UX pattern to boost crypto adoption. 3.⁠ A personalized crypto transfer experience that fosters emotional connection.
+
+As an onboarding solution, Angpao.money differentiates itself by being the most accessible: come with nothing, install nothing, just click the link. With zero dependencies, users can claim their first ETH in seconds, 10x the time taken to get onboard.
+
+As a concept, Angpao.money is intuitive. The notion of passing money in an envelop is native to humanity, unlike copy-pasting wallet address. Angpao.money accelerate crypto adoption by building on top of this universal pattern, for it is the natural way of how things works in life.
+
+As an experience, Angpao.money adds emotional connection to each transfer. People stay when they feel a connection, and Angpao.money makes every transfer not "only a transfer”—it becomes a memorable and positive experience. Through customizable envelope designs and personalized messages, each transfer carries not only economic but also sentimental value. Additionally, all senders receive a free ENS subdomain, allowing recipients to see a human-friendly name instead of a cold hexadecimal address.
+
+Angpao.money is made possible by technologies from ENS, The Graph, Worldcoin, Reown, Nouns Dao. Built with simplicity in mind, now everyone and anyone can receive crypto with Angpao.money.
+
+How it's Made
+The core Angpao.money is composed of 2 process:
+
+Creating Angpao Components: The Graph Substream, Application Database In this stage, user’s Angpao configuration will be save into Application Database with draft status. After the user signs a transaction with Angpao Creator to deposit assets into contract, we wait for Substream to update the entry’s status. Once the entry has been updated to active status, the link is returned to the user at the website.
+
+Claiming Angpao (Gasless) Components: The Graph Substream, Application Database, Server Backend In this stage, the Recipient that visit the Angpao.money link will be prompted sign a message to prove authenticity. Then, the signature is sent to the Backend to be verified. Upon successful verification, the backend triggers a transfer into the recipient’s address. Similarly, we use the Graph Substream to monitor the transaction status and update the App Database’s entry to prevent double claims.
+
+Other components:
+
+Multi-wallet support including social login with Appkit. With our focus on onboarding beginners, Appkit made connecting wallet invisible and less-pervasive as well.
+Programmatic ENS name assignation. All first-time senders are required to provide a username when they are creating their first Angpao. From both crypto adoption perspective and marketing perspective, this is a critical feature that will drive growth in both topic.
+Nouns Art was used to decorate the envelope cover. The PFP endpoint is super developer friendly, and the randomness had breath live into our project.
+Angpao.money prevents Sybils attacks by providing the option to verify with Worldcoin. Using incognito actions that are programmatically created for each Angpao, we make sure each person can only open it once, even the link can be claimed multiple times.
+Deployments:
+Cloudflare: Website, DNS
+Fly.io: offchainResolverGateway for ENS subdomain names, Worldcoin cloud verifier, Substream JS sink.
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+project screenshot 6
+Geist
+Geist is a Decentralized Autonomous Website (DAW) Builder. Wallet Whitelist for Private Previews, Trustless zk-proof based deployment after anti collusion proposal voting, we allow DAOs to collaborate at scale and make the Internet more trustless.
+
+Live Demo
+Source Code
+Geist
+Created At
+ETHGlobal Singapore
+Winner of
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+ETHGlobal SG 24 Submission | Presentation
+
+Today, one can build a static dWebsite that is censorship resistent, decentralized by hosting it on IPFS, with resolution handled by ENS domain. Websites can be updated via IPNS wiith immutable content trails and made persistent with IPFS pinnings. Great tools such as eth.limo and fleek made such approach user friendly. Pairing with smart contract, we can create autonomous dApp comprised of UI and fully on-chain application states that benefit from security and governance mechanism of Ethereum.
+
+As billions of websites are not decentralized today, we explore challenges and opportunites for making dWebsite greater and more autonomous.
+
+We build Geist to support DAW by removing trust assumptions in development & deployment, add private previews to website and support anti collusion voting, so we can say good bye to seat-based pricing centralization tools and for DAO to collaborate at scale.
+
+Challenges of DAW
+Lack of Privacy
+IPFS has no content encryption and teams or DAOs always fallback to small trusted core team and centralized identity for collaboration.
+In particualr, private previews and review/voting on proposal are often essential for websites.
+
+WEB3 Identity unfriendly
+Existing platforms such as Github, Vercel are hard to be utilized by large, diverse group of contributors, due to high seat-based pricing and lack of web3-identity (e.g. wallets/ens) based access control mechanisms. On-chain whitelist is often prohibitive due to inflexibility and cost.
+
+Privileged Access Everywhere
+Websites deployment are subject to all sort of attack vectors, from DNS registrar, supply chain attack to various hosting concerns. Censorship resistance is not guarantee on hosted platforms and pipelines always require priviledged access.
+
+We would like to bring on-chain security to make websites more autonomous, add guardrails and make changes more trackable? We see a lot of use cases from DAW, from displaying censorship-sensitive key information, Whistle Bowling, Crowdfunding, Community Notes, Internet Archive to where fair mechanisms is in need such Autonomous World or Advertisement.
+
+How it's Made
+Whitelist Gateway base on ENS for Private preview
+We host websites preview on IPFS encrypted behind our gateway website. Users are required to visit gateway and sign with wallet to for access. With CCIP protocol, we deployed a Hybrid resolver which is able to resolve both on and off chain data. The resolver will resolve encrypted hash at TXT record of target domain and attach token to custom gateway for authentication. UI Gateway will redirect user given derypted ipfs hash response if user is whitelisted.
+
+Website proposal voting via MINA
+we use MACI to support users to decide which version of proposed website can be deployed.
+
+A zk proof on the tally results will be generated and can be associated with the build.
+
+we deployed a Hybrid resolver which is able to resolve both on and off chain data.
+
+source code of gateway is under apps/worker, originally maintained at separate forked repository ens-offchain-registrar
+
+Trustless deployment via MINA based ZK Proofs
+Proof of Build is created for each website build
+
+Using Next.js static websites as an example, we can gather fingerprint from the build (under /out directory) including
+routes (/route1 create route1.html)
+file hashes (CID via multiformat package as used by ipfs)
+MACI of proposal
+We use MINA chain to verify the build to be deployed is in line with proposal, by creating merkle map and and comparing against on-chain commitment
+
+In future, it is possible to further automate the trustless process once Protokit is able to roll up to L1 and the production EVM bridge is deployed.
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+project screenshot 6
+Hanseek
+A blockchain-based verified video review platform for food lovers, rewarding real reviews by real people.
+
+Source Code
+Hanseek
+Created At
+ETHGlobal Singapore
+Winner of
+
+Flow - Most Killer App Potential 2nd place
+
+Worldcoin - Pool Prize
+Prize Pool
+
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+Hanseek is a blockchain-based video review platform that restores trust in restaurant recommendations. Reviewers are verified with World ID, ensuring that only real people can post reviews. Reviews are stored on Flow’s blockchain, ensuring transparency and preventing tampering, while Dynamic enables seamless onboarding so users can easily engage in the real world.
+
+Demo Video: https://youtu.be/YXiSfdBZOxA (this is the real demo video, last project's video misuploaded in "media upload)
+
+Users can browse short video reviews, book restaurants directly, and trust the recommendations they see. Creators earn rewards when users visit a restaurant based on their reviews, and restaurants attract more customers through verified, trusted feedback.
+
+How it's Made
+We built Hanseek with a consumer experience-first mindset, using technology that ensures anyone can use it with ease in real-world scenarios. Our goal is to make the platform accessible, even for users unfamiliar with blockchain.
+
+Dynamic integration simplifies wallet creation, allowing users to sign up with social login and automatically generate a Flow wallet, removing barriers to entry. We use World ID to verify that each review is from a real person, ensuring the authenticity of every review. Reviews are stored on Flow’s blockchain, guaranteeing transparency and security. Restaurant bookings and payments are processed through Flow’s smart contracts, providing a smooth and familiar experience for all users, regardless of their Web3 knowledge.
+
+[Demo Video] https://youtu.be/YXiSfdBZOxA
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+fheProxies
+fheVPN (Proxies) is a decentralized Proxy-as-a-Service (PaaS) enabling anonymous web browsing via nodes from global operators. Fully Homomorphic Encryption (FHE) ensures only clients who pay on-chain through the Fhenix network can securely access node details.
+
+Live Demo
+Source Code
+fheProxies
+Created At
+ETHGlobal Singapore
+Winner of
+
+Fhenix - Best use of Fhenix Stack 3rd place
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+fheVPN (Proxies) leverages the power of Fully Homomorphic Encryption (FHE) to provide secure, anonymous web browsing through a decentralized Proxy-as-a-Service (PaaS) model. Node operators can spin up proxy nodes in various regions and set a price for access. The details of these nodes are encrypted using FHE, ensuring that only authorized clients who have paid through the Fhenix network can access them. Even in the event of IP leaks, unauthorized users are blocked by a whitelisting mechanism. This removes the need for passwords, as the client’s IP is encrypted and shared with the node provider for whitelisting after payment. This creates a secure, anonymous browsing experience powered by blockchain.
+
+How it's Made
+fheVPN (Proxies) leverages the Fhenix network’s integration of Fully Homomorphic Encryption (FHE) with smart contracts to provide secure access control. The backend allows node operators to deploy proxy nodes and encrypt their details using FHE, ensuring that sensitive data like IP addresses remain confidential. Clients make payments on-chain using the ethers.js library, and their IP addresses are encrypted through the Fhenix network. This information is only visible to the node providers, who whitelist clients for access.
+
+On the frontend, we used Next.js for the interface, enabling users to seamlessly manage and connect to proxies. We also integrated fhenix.js for encrypted interactions with the network. The platform was deployed on a local devnet to facilitate testing and development in a secure environment, ensuring the privacy and security of all transactions and proxy connections.
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+SQUIDL
+Squidl is a privacy-focused platform that makes managing payments simple and secure. With private static payment links that also work as ENS addresses, you can easily accept crypto or credit card payments while keeping everything untraceable.
+
+Live Demo
+Source Code
+SQUIDL
+Created At
+ETHGlobal Singapore
+Winner of
+
+Oasis Protocol - Best use of Sapphire and/or ROFL 3rd place
+
+Dynamic - Best Consumer Crypto Project
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+Squidl.me is a platform designed to give individuals and businesses total control over their payments and financial transactions. By using stealth addresses, Squidl ensures that every transaction is private and untraceable. With custom static payment links that double as ENS addresses, users can easily receive payments in crypto or fiat without exposing their identities or financial data. The platform offers seamless integration with various blockchain networks, including Ethereum, BSC, Morph, Linea, and Flow EVM, allowing users to accept a wide range of payment options. Additionally, credit card payments are converted to USDC and bridged to BSC, ensuring both convenience and privacy. Squidl also features the ability to bridge funds to the Oasis Sapphire network, where transactions become completely untraceable, adding an extra layer of security. Squidl’s flexibility extends to asset transfers as well, supporting the private transfer of NFTs, soulbound tokens, and liquidity tokens. With its easy-to-use interface, unified dashboard, and powerful SDK for developers, Squidl is the go-to platform for anyone looking to manage payments with privacy, flexibility, and control.
+
+How it's Made
+Our double-blind stealth address system guarantees that no third party, including us as developers, can ever know of the existence of any stealth address, or the financial value stored in these stealth addresses, marking a breakthrough in EVM privacy that rivals Bitcoin’s silent payment wallets.
+
+We use Sapphire ParaTime to make our stealth address system fully non-custodial. While Vitalik’s stealth addresses offer a lightweight approach to enhanced privacy on Ethereum, they require Elliptic Curve Diffie-Hellman (ECDH), which in other implementations exposes private keys to potentially insecure environments like the user’s device, dApp website, or developer’s server backend, or user’s browser runtime (that time and again have reported vulnerabilities).
+
+By leveraging Sapphire’s EVM precomputes, we generate entropy and perform elliptic curve operations all within Sapphire’s Trusted Execution Environment (TEE), eliminating the risk of private key theft or exfiltration, especially when used with hardware wallets. We also use Sapphire’s precomputes to derive secp256k1 public keys from ECDH shared secrets, a critical operation for silent payments (BIP 0352 / EIP 5564) that would normally require significant gas without these optimizations, (in fact more that 550,000 gas for just one derivation of a single stealth address).
+
+Our setup enables the creation of simple, reusable payment URLs with no expiration, which encode static meta-addresses for use across multiple transactions. These URLs can generate an unlimited amount of stealth addresses, and are secure against man-in-the-middle attacks, with the only potential risk being the unlikely scenario of a malicious or compromised Sapphire Network RPC provider.
+
+Additionally, we use Sapphire ROFL to fetch stealth-ephemeralPubKeys announcement pages from off-chain public servers from within attested Sapphire TEEs/SGX, and then scan for on-chain activity of stealth addresses through omni-chain wallet API providers (1inch). Since each visit to our payment link or ENS resolution generates a unique stealth address, many such generated addresses may not be used at all. The ROFL TEE Oracle checks for transactions or ERC-20 transfers linked to each stealth address, before recording announcements (ephemeralPubKeys) permanently on-chain through on-chain event logs (that reveal no address or secrets). This improves upon the previous cumbersome UX within EIP 5562, of requiring the sender or payer to publish an announcement data on-chain, after any transaction to each stealth address.
+
+EIP 5562 also leaks the existence of such stealth addresses through the emitted Announcement event that contains all stealth addresses in plaintext. The way that our smart contracts and oracles are built on top of Sapphire’s technology stack, avoids such an issue, thus guaranteeing that no third party, including us as developers, can ever know of the existence of these stealth addresses, or the financial value stored in these stealth addresses, marking a breakthrough in EVM privacy that rivals Bitcoin’s silent payment wallets.
+
+Noteworthy Hack 1: Sender privacy is significantly more difficult to achieve than receiver privacy. Receiver privacy means the sender does not know the receiver’s identity, while sender privacy means the recipient does not know the sender’s identity. Achieving sender anonymity for fungible and non-fungible token transfers has been a long-standing challenge in the EVM ecosystem, previously only possible through gas-intensive solutions like Tornado Cash or Railgun, which are vulnerable to international sanctions. With the use of Cellar cBridge, ERC20 tokens can be converted into special Sapphire private wrapped tokens that prevent leakage of recipient balances or sender addresses. By transferring these private wrapped tokens between stealth addresses within Sapphire’s privacy-focused network, all typical ERC20 event logs—such as ERC20.Transfer(from, to)—are concealed, making sender privacy attainable on the EVM. This ensures that third-party observers, including the recipient, cannot identify the sender’s address. Combined with our stealth address system, recipients can create uniquely labeled payment links that do not expose the sender’s identity after the transaction. This solution enables token transfers with full sender privacy and no additional gas overhead (compared to a typical ERC20 Transfer).
+
+Noteworthy Hack 2: All cryptographic operations required for stealth addresses are performed within Sapphire’s EVM. Including signing transactions when spending/sending from stealth addresses. Keys never leave the secure enclave, thus becoming like a HSM in the cloud.
+
+Noteworthy Hack 3: We developed StealthSdk.sol, a contract that can be deployed on any EVM chain supported by Sapphire’s OPL. This allows users to register for our stealth address system by simply calling StealthSdk.register(eip712Auth) on their home network, without needing to acquire ROSE (Sapphire’s gas token) themselves. However, we can only demo this feature after further coordination with Sapphire testnet SGN operators.
+
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+project screenshot 5
+project screenshot 6
+Nifi
+Nifi is a First Ever Built Web3-based captive portal for secure WiFi access, using token and NFT authentication on the blockchain. It seamlessly authorizes users by verifying digital assets for fair usage. Secure, decentralized, and user-friendly!
+
+Source Code
+Nifi
+Created At
+ETHGlobal Singapore
+Winner of
+
+Dynamic - Most Innovative Integration
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+Nifi: Web3-Based Network Identity and Framework Interface
+Have you ever entered a lounge or boarded an airline like Singapore or Emirates, where you're asked to log in using your frequent flyer number or mobile number to access WiFi? Now, imagine a similar experience—but instead of using a traditional login, access is granted based on the crypto or NFTs you hold in your Web3 wallet.
+
+That's what I've built: a captive portal solution powered by Web3 technology. It lets you grant WiFi access based on your digital assets, like tokens or NFTs, offering a seamless, decentralized alternative to the usual login methods.
+
+Let’s dive into how it works!
+
+Problem Statement
+As the demand for decentralized identity solutions grows, traditional WiFi networks lack the ability to authenticate users via blockchain-based assets, such as NFTs and tokens. Existing captive portals focus on centralized methods for access control, leaving out web3 authentication mechanisms, which are becoming increasingly important for modern users who rely on blockchain assets for identification and access to services.If such capitative portal and access flow is built it can provide wide variety of usecases such as pay as you go model through crypto assets, wifi access in airlines through nft tickets and so on...
+
+Nifi aims to solve this problem by enabling token-based WiFi authentication through a custom captive portal that leverages Web3 technologies. The system uses NFTs and tokens as access credentials, providing an innovative solution for decentralized network access.
+
+System Overview
+Nifi integrates blockchain, OpenNDS, and Raspberry Pi to create a decentralized captive portal that authenticates users using ERC20, ERC721, and ERC1155 tokens. It relies on a pre-authentication flow and forward authentication services (FAS) to grant or deny network access.
+
+Technical Implementation
+Hardware & Platform:
+
+Raspberry Pi: Acts as the central gateway running OpenNDS for managing the captive portal.
+OpenNDS: Handles the network access and communicates with Nifi to determine whether access should be granted or denied.
+DNSMASQ & DHCP: Manage DNS and IP address assignments on the Raspberry Pi, working in conjunction with OpenNDS.
+Hostapd: Provides the wireless access point functionality.
+Software Components:
+
+Next.js: A React-based framework used for building the Nifi Captive Portal UI, which displays authentication prompts to the users.
+Preauth Service: Ensures users are authorized to access web3 services by validating their token ownership.
+Blockchain Integration: Nifi checks conditions on the blockchain to verify the user's assets, such as NFTs or tokens, and authorize access based on predefined rules.
+OpenNDS Integration: After verification, Nifi interacts with OpenNDS, sending authorization calls that either grant or deny network access.
+Architecture
+Client/User Device: Connects to the WiFi network and initiates the pre-authentication process.
+Preauth Service: Premetive Internet Grant Access Service built in nodejs.
+Nifi Captive Portal (Next.js): Displays user authentication pages, manages access rules and communicates with OpenNDS.
+OpenNDS: Controls network access and grants/rejects user connections based on Nifi’s authorization call.
+Raspberry Pi: Acts as the gateway, running OpenNDS, DNSMASQ, DHCP, and Hostapd, to provide a complete network access solution.
+Workflow
+User Connects to WiFi: A client device connects to the WiFi hotspot served by the Raspberry Pi.
+Pre-authentication: The user attempts to access the internet, which triggers the Preauth Service. This service checks whether the user meets the required conditions for accessing web3 services (e.g., owning a specific NFT).
+Blockchain Verification: The user's blockchain assets are verified by the preauth service, ensuring they meet the criteria (e.g., holding a required number of tokens).
+Authentication via Nifi: Nifi checks the user’s blockchain data and token ownership and sends an authorization call to OpenNDS.
+OpenNDS Decision: OpenNDS receives the authorization and either grants or denies the user access to the internet.
+Access Granted or Rejected: Based on OpenNDS’s decision, the user either gains internet access or is redirected to a rejection page.
+Key Features
+Token-based Authentication: Nifi leverages blockchain tokens and NFTs as access credentials. Supported tokens include ERC20, ERC721, and ERC1155.
+Blockchain-Verified Access: Users must sign and verify their blockchain assets, such as NFTs or tokens, to gain network access.
+Forward Authentication Service: OpenNDS’s forward authentication (FAS) is used to securely verify users’ credentials before granting access.
+Integration with OpenNDS: The system communicates with OpenNDS, which handles network management and redirects based on the user’s access status.
+Customizable Rules: Admins can set custom rules for token-based authentication, such as the type and number of tokens required for access.
+Future Enhancements
+Multi-chain Support: Extend Nifi’s functionality to support tokens and NFTs from multiple blockchains.
+Token Escrow: Implement token escrow services where tokens are temporarily locked during a user's session for added security and for pay as you go model.
+Challenges and Solutions
+Smooth User Experience: Ensuring that users experience minimal delays during the sign-in process required optimizing the Next.js interface and ensuring fast blockchain interactions.
+OpenNDS Integration: Integrating Nifi with OpenNDS involved understanding the nuances of forward authentication and how it handles network traffic and access decisions.
+By combining the power of decentralized identity and blockchain with traditional network access, Nifi represents a step toward a more secure and user-controlled internet experience.
+
+How it's Made
+Technical Implementation
+Hardware & Platform:
+
+Raspberry Pi: Acts as the central gateway running OpenNDS for managing the captive portal.
+OpenNDS: Handles the network access and communicates with Nifi to determine whether access should be granted or denied.
+DNSMASQ & DHCP: Manage DNS and IP address assignments on the Raspberry Pi, working in conjunction with OpenNDS.
+Hostapd: Provides the wireless access point functionality.
+Software Components:
+
+Next.js: A React-based framework used for building the Nifi Captive Portal UI, which displays authentication prompts to the users.
+Preauth Service: Ensures users are authorized to access web3 services by validating their token ownership.
+Blockchain Integration: Nifi checks conditions on the blockchain to verify the user's assets, such as NFTs or tokens, and authorize access based on predefined rules.
+OpenNDS Integration: After verification, Nifi interacts with OpenNDS, sending authorization calls that either grant or deny network access.
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
+Events
+Showcase
+Packs
+Plus New
+Guides
+Swag
+About
+
+Open user menu
+Avatar
+project screenshot 1
+project screenshot 2
+project screenshot 3
+project screenshot 4
+Marina Royale
+Lottery using Uniswap V4 hooks with built-in referrals. Mobile-optimized through Telegram with gas-free experience on Base.
+
+Live Demo
+Source Code
+Marina Royale
+Created At
+ETHGlobal Singapore
+Winner of
+
+Pyth Network - Most Innovative use of Pyth Entropy
+
+Uniswap Foundation - Hooks, Hooks, and Hooks 2nd place
+
+ETHGlobal - 🏆 ETHGlobal Singapore 2024 Finalist
+Project Description
+We leverage Uniswap V4 hooks instead of traditional ERC4626 vaults allowing anyone with liquidity to spin up their lottery pools. Particularly, meme communities or large treasuries with utility tokens can now provide liquidity using their native tokens, unlocking highly positive expected value opportunities.
+
+We've created a mobile-optimized experience using embedded wallets and paymaster logic to remove gas fees from users. We use the Dynamic Wallet to onboard users.
+
+Key features include:
+
+Risk-based allocation of LP pool for lottery
+Multiple winning scenarios based on pool sizes
+Uniswap V4 integration for curve-based liquidity with built-in referral system
+Pyth Network for secure, decentralized entropy generation
+Unlike lossless lotteries, our system offers distinct expected values for both players and liquidity providers:
+
+Players have a chance at winning significant jackpots, with the trade-off of potential loss of principal. Liquidity providers earn from unsuccessful tickets and benefit from the built-in referral system, potentially earning more than in traditional yield-generating protocols.
+
+Our referral system, built directly into the Uniswap V4 hooks, incentivizes community growth & potentially creates token utility: When a referred user participates and doesn't win, 20% of their ticket value goes to the referrer. The remaining 80% is distributed among the liquidity providers. For example, if user A is referred and buys 10 tickets worth $10 USDC, and the jackpot expires without them winning, $2 goes to the referrer and $8 is shared among the LPs.
+
+How it's Made
+Smart Contracts: Two contracts (Lottery.sol and LotteryManager.sol) that implement the core lottery logic and management functions.
+Uniswap V4 Hooks: In favour of hook-based liquidity instead of ERC4626 vaults, this allows for more efficient liquidity management, unique lottery mechanics, and a built-in referral system.
+Pyth Network Integration: We use Pyth for generating secure, decentralized entropy, ensuring fair and unpredictable lottery outcomes.
+Embedded Wallets: Implemented using Dynamic wallet, this feature simplifies user onboarding and interaction with the lottery.
+Paymaster Logic: We've abstracted gas fees away from users through ZeroDev.
+background image
+Join the mailing list
+Get the latest
+news and updates
+Your email address
+Get on the list
+Sign up to get the latest news and updates on ETHGlobal
+Your email address
+
+Products
+Hackathons
+Pragma
+Packs
+Plus New
+Faucet
+Guides
+Legal
+Rules & Conduct
+Privacy Policy
+Company
+About
+Brand
+Careers Hiring
+© 2024 ETHGlobal. All rights reserved.
+
