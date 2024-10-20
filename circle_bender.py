@@ -189,6 +189,48 @@ def encrypt_entity_secret():
 
     return encrypted_entity_secret
 
+MASTER_WALLET_ID = "f89bfdb1-ccf3-517a-8046-12cffeb406de"
+def master_pay_eth(amount: str, from_address: str):
+    return create_transfer(from_address,
+                                   ETH_SEPOLIA_ADDRESS,
+                                      amount, MASTER_WALLET_ID)
+
+
+def create_transfer(from_wallet_id: str, from_token_id: str, amount: str, destination_address: str):
+    print("Creating transfer from wallet ID:", from_wallet_id, "from_token_id:", from_token_id,
+          "to address:", destination_address, "with amount:", amount)
+    entitySecretCipherText = encrypt_entity_secret()
+
+    # wallet_id = "f89bfdb1-ccf3-517a-8046-12cffeb406de"
+
+    #generate new uuid for idempotency key
+    idempotencyKey = uuid.uuid4()
+
+    # print(idempotencyKey)
+
+    payload = {
+        "idempotencyKey": str(idempotencyKey),
+        "entitySecretCipherText": entitySecretCipherText,
+        "amounts": [amount],
+        "destinationAddress": destination_address,
+        "feeLevel": "HIGH",
+        "tokenId": from_token_id,
+        "walletId": from_wallet_id
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+os.getenv('CIRCLE_API_KEY')
+    }
+
+    url = "https://api.circle.com/v1/w3s/developer/transactions/transfer"
+
+    response = requests.post(url, json=payload, headers=headers)
+
+    print(response.text)
+
+    return response.json().get('data').get('id')
+
 
 def wallet_balance(wallet_id: str, ref_token_id: str = ETH_SEPOLIA_ADDRESS):
     print("Getting wallet balance for wallet ID:", wallet_id)

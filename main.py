@@ -26,7 +26,7 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("ALLOWS_ORIGIN")],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -134,8 +134,8 @@ async def register_project(project: str = Form(...)):
     except Exception as e:
         return {"error": str(e)}
 
-@app.post("/list-projects")
-async def list_projects():
+@app.post("/leaderboard")
+async def leaderboard():
     try:
         db = SessionLocal()
         projects = db.query(Project).all()
@@ -147,19 +147,23 @@ async def list_projects():
                 # Fetch the balance using the wallet_id
                 balance = circle_bender.wallet_balance(project.wallet_id)
             except Exception as e:
-                balance = "Error fetching balance"
+                balance = 0  # Set balance to 0 if there's an error fetching it
 
             project_list.append({
                 "name": project.name,
                 "wallet_id": project.wallet_id,
                 "wallet_address": project.wallet_address,
                 "ens_address": project.ens_address,
-                "balance": balance  # Include the balance in the response
+                "balance": balance
             })
 
-        return {"projects": project_list}
+        # Sort the project list by balance in descending order
+        sorted_project_list = sorted(project_list, key=lambda x: x['balance'], reverse=True)
+
+        return {"leaderboard": sorted_project_list}
     except Exception as e:
         return {"error": str(e)}
+
 
 
 @app.post("/generate-ens")
@@ -174,6 +178,55 @@ async def generate_ens(name: str = Form(...), address: str = Form(...)):
         return {"execution_result": execution_result}
     except Exception as e:
         return {"error": str(e)}
+
+@app.get("/pay-to-luckies")
+async def pay_to_luckies(winner_project_names: List[str]):
+    """
+    Select winners, collect funds from each project's wallets, calculate the total amount,
+    divide it among the winners, and pay each winner their share.
+    """
+    try:
+        db = SessionLocal()
+
+        # Retrieve all projects from the database
+        projects = db.query(Project).all()
+
+        # Collect funds from each project's wallets
+        total_amount = 0.0
+        for project in projects:
+            # Get the wallet balance
+            balance = circle_bender.wallet_balance(project.wallet_id)
+            balance_amount = float(balance)
+            if balance_amount > 0:
+                # Transfer balance from the project's wallet to the master wallet
+                circle_bender.master_pay_eth(balance, project.wallet_id)
+                total_amount += balance_amount
+
+        if not winner_project_names:
+            raise HTTPException(status_code=400, detail="No winner project names provided.")
+
+        # Calculate the amount per winner
+        amount_per_winner = total_amount / len(winner_project_names)
+
+        # Pay each winner their share
+        for winner_name in winner_project_names:
+            # Get the winner's project details
+            winner_project = db.query(Project).filter(Project.name == winner_name).first()
+            if not winner_project:
+                continue  # Skip if the project is not found
+
+            # Transfer the amount to the winner's wallet
+            circle_bender.create_transfer(
+                from_wallet_id=circle_bender.MASTER_WALLET_ID,
+                from_token_id=circle_bender.ETH_SEPOLIA_ADDRESS,
+                amount=str(amount_per_winner),
+                destination_address=winner_project.wallet_address
+            )
+
+        return {"message": "Funds distributed to winners successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # Start the app
 if __name__ == "__main__":
