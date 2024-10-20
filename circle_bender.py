@@ -1,6 +1,8 @@
 import os
 import uuid
 import logging
+from decimal import Decimal, getcontext
+
 from circle.web3 import developer_controlled_wallets as dc_wallets
 from circle.web3 import smart_contract_platform, developer_controlled_wallets
 from circle.web3 import utils as circle_utils
@@ -14,6 +16,8 @@ from Crypto.Hash import SHA256
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -190,10 +194,123 @@ def encrypt_entity_secret():
     return encrypted_entity_secret
 
 MASTER_WALLET_ID = "f89bfdb1-ccf3-517a-8046-12cffeb406de"
-def master_pay_eth(amount: str, from_address: str):
+MASTER_WALLET_ADDRESS = "0x11aaa9a23be5bc8388373a35343a4fbc94192599"
+
+
+def pay_to_winner(amount, winner_address):
+    getcontext().prec = 28  # Set appropriate precision
+
+    logger.info(f"pay_to_winner called with amount: {amount}, winner_address: {winner_address}")
+
+    # Retrieve necessary environment variables
+    api_token = os.getenv('CIRCLE_API_KEY')
+    logger.debug(f"CIRCLE_API_KEY retrieved: {'Yes' if api_token else 'No'}")
+
+    # Construct the request URL and parameters
+    url = 'https://api.circle.com/v1/w3s/transactions'
+
+    params = {
+        'blockchain': 'ETH-SEPOLIA',
+        'custodyType': 'DEVELOPER',
+        'destinationAddress': winner_address,
+        'operation': 'TRANSFER',
+        'state': 'CONFIRMED'
+    }
+
+    logger.debug(f"Request URL: {url}")
+    logger.debug(f"Request params: {params}")
+
+    headers = {
+        'Authorization': f'Bearer {api_token}',
+        'Content-Type': 'application/json'
+    }
+
+    payments = []  # List to store the payments
+
+    try:
+        # Send GET request
+        logger.info("Sending GET request to Circle API to retrieve transactions")
+        response = requests.get(url, headers=headers, params=params)
+        logger.debug(f"Response status code: {response.status_code}")
+        response.raise_for_status()
+        data = response.json()
+        logger.debug(f"Response data: {data}")
+
+        data = data.get('data', [])
+        transactions = data.get('transactions', [])
+        logger.info(f"Found {len(transactions)} transactions")
+
+        source_address_amounts = {}
+        total_contributed_amount = Decimal('0')
+
+        for transaction in transactions:
+            logger.debug(f"Processing transaction ID: {transaction.get('id')}")
+            if (transaction.get('tokenId') == ETH_SEPOLIA_ADDRESS and
+                transaction.get('state') == 'CONFIRMED' and
+                transaction.get('transactionType') == 'INBOUND'):
+
+                source_address = transaction.get('sourceAddress')
+                logger.debug(f"Transaction source address: {source_address}")
+                amounts = transaction.get('amounts', [])
+                for amt_str in amounts:
+                    amt = Decimal(amt_str)
+                    logger.debug(f"Amount in transaction: {amt}")
+                    if source_address in source_address_amounts:
+                        source_address_amounts[source_address] += amt
+                    else:
+                        source_address_amounts[source_address] = amt
+                    total_contributed_amount += amt
+
+        logger.info(f"Total contributed amount: {total_contributed_amount}")
+
+        if total_contributed_amount == Decimal('0'):
+            logger.warning("No contributions found.")
+            return payments  # Return empty list
+
+        # Convert amount parameter to Decimal
+        total_amount_to_pay = Decimal(amount)
+        logger.info(f"Total amount to pay: {total_amount_to_pay}")
+
+        # For each sourceAddress, compute amount to pay and call pay_from_master
+        for source_address, contributed_amount in source_address_amounts.items():
+            logger.debug(f"Computing payment for source address: {source_address}")
+            proportion = contributed_amount / total_contributed_amount
+            amount_to_pay = total_amount_to_pay * proportion
+            # Round amount_to_pay appropriately, e.g., to 6 decimal places
+            amount_to_pay = amount_to_pay.quantize(Decimal('0.000001'))
+            # Convert amount_to_pay to string
+            amount_to_pay_str = format(amount_to_pay, 'f')
+            logger.info(f"Paying {amount_to_pay_str} to {source_address}")
+            # Call pay_from_master(amount_to_pay_str, source_address)
+            transfer_result = pay_from_master(amount_to_pay_str, source_address)
+            logger.debug(f"Transfer result: {transfer_result}")
+            # Append the payment details to the list
+            payments.append({
+                'amount': amount_to_pay_str,
+                'source_address': source_address,
+                'transfer_result': transfer_result
+            })
+
+        logger.info(f"Payments made: {payments}")
+        return payments  # Return the list of payments
+
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTP error occurred: {e.response.text}")
+        return payments  # Return whatever payments have been processed so far
+    except Exception as e:
+        logger.exception("An error occurred in pay_to_winner")
+        return payments  # Return whatever payments have been processed so far
+
+
+def pay_to_master(amount: str, from_address: str):
     return create_transfer(from_address,
                                    ETH_SEPOLIA_ADDRESS,
-                                      amount, MASTER_WALLET_ID)
+                                      amount, MASTER_WALLET_ADDRESS)
+
+def pay_from_master(amount: str, to_address: str):
+    return create_transfer(MASTER_WALLET_ID,
+                                   ETH_SEPOLIA_ADDRESS,
+                                      amount, to_address)
 
 
 def create_transfer(from_wallet_id: str, from_token_id: str, amount: str, destination_address: str):
@@ -225,11 +342,19 @@ def create_transfer(from_wallet_id: str, from_token_id: str, amount: str, destin
 
     url = "https://api.circle.com/v1/w3s/developer/transactions/transfer"
 
-    response = requests.post(url, json=payload, headers=headers)
-
-    print(response.text)
-
-    return response.json().get('data').get('id')
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        logger.debug(f"Response status code: {response.status_code}")
+        logger.debug(f"Response text: {response.text}")
+        response.raise_for_status()
+        logger.info(f"Transfer successful. Response: {response.text}")
+        return response.json().get('data').get('id')
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTP error during transfer: {e.response.text}")
+        return None
+    except Exception as e:
+        logger.exception("An error occurred during create_transfer")
+        return None
 
 
 def wallet_balance(wallet_id: str, ref_token_id: str = ETH_SEPOLIA_ADDRESS):
@@ -262,5 +387,3 @@ def wallet_balance(wallet_id: str, ref_token_id: str = ETH_SEPOLIA_ADDRESS):
     except Exception as e:
         print(f"Error parsing wallet balance: {e}")
         return "0"
-
-# call_contract_execution()

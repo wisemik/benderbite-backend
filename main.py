@@ -1,32 +1,35 @@
+from typing import List
+
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
 import uvicorn
-from openai import OpenAI
+# Assuming you're using OpenAI's library
+import openai
 import logging
 import os
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Form
-
-import circle_bender
+from pydantic import BaseModel
 
 # Additional imports for database functionality
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+# Import your circle_bender module
+import circle_bender
+
 load_dotenv()
 logger = logging.getLogger(__name__)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-client = OpenAI(api_key=OPENAI_API_KEY)
+openai.api_key = OPENAI_API_KEY
 
 app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Replace with your frontend URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,6 +42,7 @@ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+
 class Project(Base):
     __tablename__ = "projects"
 
@@ -48,6 +52,7 @@ class Project(Base):
     wallet_address = Column(String)
     ens_address = Column(String)
 
+
 # Create the database tables
 Base.metadata.create_all(bind=engine)
 
@@ -56,16 +61,17 @@ if os.path.exists(finalist_file_path):
     with open(finalist_file_path, "r", encoding="utf-8") as file:
         finalists_content = file.read()
 
+
 @app.post("/ask-llm")
 async def ask_llm(question: str = Form(...)):
     try:
         prompt = f"Question: {question}"
 
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
+        completion = openai.ChatCompletion.create(
+            model="gpt-4",
             messages=[
-                {"role": "system", "content":  "You are an assistant named Bender."
-                                               "Answer in the style of Bender from a cartoon."},
+                {"role": "system", "content": "You are an assistant named Bender."
+                                              "Answer in the style of Bender from a cartoon."},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -74,25 +80,27 @@ async def ask_llm(question: str = Form(...)):
         return {"answer": answer}
     except Exception as e:
         return {"error": str(e)}
+
 
 def generate_wallet_id_and_address(project_name: str):
     """Generate wallet_id and wallet_address using the project name as a base."""
     wallet_id, wallet_address = circle_bender.initialize_wallet(project_name, project_name, project_name)
     return wallet_id, wallet_address
 
+
 @app.post("/ask-llm-with-context")
 async def ask_llm_with_context(question: str = Form(...)):
     try:
         prompt = f"Question: {question}"
 
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
+        completion = openai.ChatCompletion.create(
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are an assistant named Bender. Your role is to help hackers "
-                                               "win hackathons and answer questions about hackathons. "
-                                               "Answer in the style of Bender from a cartoon. "
-                                               f"Using the information about past hackathon winners to answer the question. "
-                                               f"Info about winners: {finalists_content}"},
+                                              "win hackathons and answer questions about hackathons. "
+                                              "Answer in the style of Bender from a cartoon. "
+                                              f"Using the information about past hackathon winners to answer the question. "
+                                              f"Info about winners: {finalists_content}"},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -101,6 +109,7 @@ async def ask_llm_with_context(question: str = Form(...)):
         return {"answer": answer}
     except Exception as e:
         return {"error": str(e)}
+
 
 @app.post("/register-project")
 async def register_project(project: str = Form(...)):
@@ -134,6 +143,7 @@ async def register_project(project: str = Form(...)):
     except Exception as e:
         return {"error": str(e)}
 
+
 @app.post("/leaderboard")
 async def leaderboard():
     try:
@@ -158,12 +168,11 @@ async def leaderboard():
             })
 
         # Sort the project list by balance in descending order
-        sorted_project_list = sorted(project_list, key=lambda x: x['balance'], reverse=True)
+        sorted_project_list = sorted(project_list, key=lambda x: float(x['balance']), reverse=True)
 
         return {"leaderboard": sorted_project_list}
     except Exception as e:
         return {"error": str(e)}
-
 
 
 @app.post("/generate-ens")
@@ -179,54 +188,83 @@ async def generate_ens(name: str = Form(...), address: str = Form(...)):
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/pay-to-luckies")
-async def pay_to_luckies(winner_project_names: List[str]):
+
+class WinnerProjects(BaseModel):
+    winner_project_names: List[str]
+
+
+@app.post("/pay-to-luckies")
+async def pay_to_luckies(winner_projects: WinnerProjects):
     """
     Select winners, collect funds from each project's wallets, calculate the total amount,
     divide it among the winners, and pay each winner their share.
     """
+    winner_project_names = winner_projects.winner_project_names
     try:
+        logger.info(f"pay_to_luckies called with winner_project_names: {winner_project_names}")
         db = SessionLocal()
 
         # Retrieve all projects from the database
         projects = db.query(Project).all()
+        logger.debug(f"Retrieved projects from database: {[project.name for project in projects]}")
+
+        for winner_name in winner_project_names:
+            winner_project = db.query(Project).filter(Project.name == winner_name).first()
+            if not winner_project:
+                logger.error(f"There is no project with such name: {winner_name}")
+                return {"error": f"There is no project with such name: {winner_name}"}
+            else:
+                logger.debug(f"Found winner project in database: {winner_project.name}")
 
         # Collect funds from each project's wallets
         total_amount = 0.0
         for project in projects:
+            logger.info(f"Processing project: {project.name}")
             # Get the wallet balance
             balance = circle_bender.wallet_balance(project.wallet_id)
+            logger.debug(f"Wallet balance for {project.name} (wallet_id: {project.wallet_id}): {balance}")
             balance_amount = float(balance)
             if balance_amount > 0:
+                logger.info(f"Transferring {balance} from {project.name} to master wallet")
                 # Transfer balance from the project's wallet to the master wallet
-                circle_bender.master_pay_eth(balance, project.wallet_id)
+                transfer_result = circle_bender.pay_to_master(balance, project.wallet_id)
+                logger.debug(f"Transfer result for {project.name}: {transfer_result}")
                 total_amount += balance_amount
+            else:
+                logger.info(f"No balance to transfer for {project.name}")
+
+        logger.info(f"Total amount collected: {total_amount}")
 
         if not winner_project_names:
+            logger.error("No winner project names provided.")
             raise HTTPException(status_code=400, detail="No winner project names provided.")
 
         # Calculate the amount per winner
         amount_per_winner = total_amount / len(winner_project_names)
+        logger.info(f"Amount per winner: {amount_per_winner}")
+
+        payments = []  # List to store the payments
 
         # Pay each winner their share
         for winner_name in winner_project_names:
+            logger.info(f"Processing payment for winner: {winner_name}")
             # Get the winner's project details
             winner_project = db.query(Project).filter(Project.name == winner_name).first()
-            if not winner_project:
-                continue  # Skip if the project is not found
 
-            # Transfer the amount to the winner's wallet
-            circle_bender.create_transfer(
-                from_wallet_id=circle_bender.MASTER_WALLET_ID,
-                from_token_id=circle_bender.ETH_SEPOLIA_ADDRESS,
+            payment_result = circle_bender.pay_to_winner(
                 amount=str(amount_per_winner),
-                destination_address=winner_project.wallet_address
+                winner_address=winner_project.wallet_address
             )
+            logger.debug(f"Payment result for {winner_name}: {payment_result}")
+            payments += payment_result
 
-        return {"message": "Funds distributed to winners successfully."}
+        logger.info(f"Payments completed: {payments}")
+        return {"winners": payments}
     except Exception as e:
+        logger.exception("An error occurred in pay_to_luckies")
         raise HTTPException(status_code=500, detail=str(e))
-
+    finally:
+        db.close()
 
 # Start the app
 if __name__ == "__main__":
