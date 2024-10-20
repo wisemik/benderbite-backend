@@ -11,6 +11,7 @@ import openai
 import logging
 import os
 from pydantic import BaseModel
+from openai import OpenAI
 
 # Additional imports for database functionality
 from sqlalchemy import create_engine, Column, Integer, String
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 openai.api_key = OPENAI_API_KEY
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 app = FastAPI()
 # CORS middleware
@@ -67,11 +69,16 @@ async def ask_llm(question: str = Form(...)):
     try:
         prompt = f"Question: {question}"
 
-        completion = openai.ChatCompletion.create(
-            model="gpt-4",
+        completion = client.chat.completions.create(
+            model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are an assistant named Bender."
-                                              "Answer in the style of Bender from a cartoon."},
+                {"role": "system", "content": "You are an assistant named Bender. Your role is to help hackers "
+                                              "win hackathons and answer questions about hackathons. "
+                                              "Answer in the style of Bender from a cartoon."
+                                              "Be useful, balance between funny part that you are a Bender,"
+                                              "but the main goal to be usefully hackathon assistant."
+                                              "Show links to the projects that you will mention"
+                 },
                 {"role": "user", "content": prompt}
             ]
         )
@@ -87,19 +94,46 @@ def generate_wallet_id_and_address(project_name: str):
     wallet_id, wallet_address = circle_bender.initialize_wallet(project_name, project_name, project_name)
     return wallet_id, wallet_address
 
+# Dependency to get a database session
+
+
+import random
+
+@app.get("/random-project")
+async def get_random_project():
+    try:
+        db = SessionLocal()
+
+        projects = db.query(Project).all()
+        if not projects:
+            raise HTTPException(status_code=404, detail="No projects found")
+
+        random_project = random.choice(projects)
+        return {
+            "name": random_project.name,
+            "wallet_id": random_project.wallet_id,
+            "wallet_address": random_project.wallet_address,
+            "ens_address": random_project.ens_address,
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.post("/ask-llm-with-context")
 async def ask_llm_with_context(question: str = Form(...)):
     try:
         prompt = f"Question: {question}"
 
-        completion = openai.ChatCompletion.create(
-            model="gpt-4",
+        completion = client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an assistant named Bender. Your role is to help hackers "
                                               "win hackathons and answer questions about hackathons. "
-                                              "Answer in the style of Bender from a cartoon. "
-                                              f"Using the information about past hackathon winners to answer the question. "
+                                              "Answer in the style of Bender from a cartoon."
+                                              "Be useful, balance between funny part that you are a Bender,"
+                                              "but the main goal to be usefully hackathon assistant. "
+                                              "To answer use the information about past "
+                                              "hackathon winners to answer the question. "
+                                              "Show links to the projects that you will mention"
                                               f"Info about winners: {finalists_content}"},
                 {"role": "user", "content": prompt}
             ]
