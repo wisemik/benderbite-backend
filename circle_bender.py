@@ -18,6 +18,8 @@ logging.basicConfig(level=logging.DEBUG)
 # Load environment variables from a .env file
 load_dotenv()
 
+ETH_SEPOLIA_ADDRESS = "979869da-9115-5f7d-917d-12d434e56ae7"
+
 def call_contract_execution(name, address):
     # Retrieve necessary environment variables
     api_token = os.getenv('CIRCLE_API_KEY')
@@ -186,5 +188,37 @@ def encrypt_entity_secret():
     encrypted_entity_secret = encrypted_secret_base64.decode()
 
     return encrypted_entity_secret
+
+
+def wallet_balance(wallet_id: str, ref_token_id: str = ETH_SEPOLIA_ADDRESS):
+    print("Getting wallet balance for wallet ID:", wallet_id)
+    api_key = os.getenv('CIRCLE_API_KEY')
+
+    url = f"https://api.circle.com/v1/w3s/wallets/{wallet_id}/balances"
+    headers = {
+        "Authorization": f"Bearer {api_key}",  # Using the API key for authentication
+        "Content-Type": "application/json"  # Ensuring the payload is sent as JSON
+    }
+    response = requests.request("GET", url, headers=headers)
+
+    # Parse the response to get the amount
+    try:
+        data = response.json()
+        print(data)
+        token_balances = data.get("data", {}).get("tokenBalances", [])
+
+        for token_balance in token_balances:
+            # Assuming we want to extract the first token balance
+            token_amount = token_balance.get("amount", "0")  # Default to 0 if amount is missing
+            token_id = token_balance.get("token", "").get("id", "")  # Default to empty string if token ID is missing
+            if token_id == ref_token_id:
+                print(f"Token amount: {token_amount}")
+                print(f"Token ID: {token_id}")
+                return token_amount
+        print("No token balances found.")
+        return "0"
+    except Exception as e:
+        print(f"Error parsing wallet balance: {e}")
+        return "0"
 
 # call_contract_execution()
